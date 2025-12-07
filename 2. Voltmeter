@@ -1,5 +1,5 @@
-// This code measures voltage using a voltage divider on pin A0.
-// It calculates the real voltage and prints it to the Serial Monitor.
+// This code measures external voltage using a voltage divider connected to A0.
+// It calculates the real voltage value and prints it in Volts.
 
 // The setup() function runs once when the board is powered on or reset
 void setup() {
@@ -10,11 +10,13 @@ void setup() {
 // The loop() function runs continuously after setup() finishes
 void loop() {
   int raw = analogRead(A0);         // Read the raw analog value (0-1023)
-  float volt = raw * (5.0 / 1023.0);// Convert the raw value to voltage
+  float volt = raw * (5.0 / 1023.0);// Convert the raw value to voltage at A0
+  float R1 = 30000.0;               // R1 value in Ohms (e.g., 30k)
+  float R2 = 10000.0;               // R2 value in Ohms (e.g., 10k)
   
-  // Note: Multiply 'volt' by the resistor ratio here for higher voltages
-  
-  Serial.print(volt);               // Print the voltage value
+  float V_in = volt * ((R1 + R2) / R2); // Calculate the original input voltage
+
+  Serial.print(V_in, 2);            // Print the voltage value (2 decimal places)
   Serial.println(" V");             // Print the unit " V"
   delay(100);                       // Wait for 100 milliseconds
 }
