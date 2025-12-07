@@ -1,5 +1,5 @@
-// This code reads the position of a potentiometer connected to pin A0.
-// It displays the raw value (0-1023) on the Serial Monitor.
+// This code reads the analog value from a potentiometer (knob) on A0.
+// It displays the raw 0-1023 numerical value on the Serial Monitor.
 
 // The setup() function runs once when the board is powered on or reset
 void setup() {
