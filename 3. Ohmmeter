@@ -10,12 +10,20 @@ void setup() {
 // The loop() function runs continuously after setup() finishes
 void loop() {
   int raw = analogRead(A0);         // Read the raw analog value (0-1023)
-  float vOut = raw * (5.0 / 1023.0);// Convert raw value to voltage at A0
-  float R_ref = 10000.0;            // Define the known resistor value (10k)
+  long R_ref = 10000L;              // Define the known resistor value (10k Ohms)
   
-  float Rx = R_ref * (5.0 / vOut - 1.0); // Calculate Unknown Resistance
+  // Handle extreme readings to prevent division by zero or negative results
+  if (raw < 5) {                    // Raw value near zero means very high Rx
+    Serial.println("Rx: VERY HIGH");
+  } else if (raw > 1020) {          // Raw value near 1023 means near zero Rx
+    Serial.println("Rx: NEAR ZERO");
+  } else {
+    // R_x = R_ref * (1024 / raw - 1)
+    // We use long for required precision during calculations
+    long R_x = R_ref * (1024L / raw - 1L); 
 
-  Serial.print(Rx);                 // Print the resistance value
-  Serial.println(" Ohms");          // Print the unit " Ohms"
+    Serial.print(R_x);              // Print the resistance value
+    Serial.println(" Ohms");        // Print the unit " Ohms"
+  }
   delay(100);                       // Wait for 100 milliseconds
 }
