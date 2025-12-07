@@ -1,3 +1,4 @@
+// This code turns on each led at a time with the potentiometer. 
 // Define the analog pin for the potentiometer
 const int potPin = A0;
 
