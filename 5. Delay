@@ -1,1 +1,53 @@
+// Define pins
+const int ledPin = 13;   // LED connected to digital pin 13
+const int buttonPin = 7; // Push button connected to digital pin 7
 
+// Variables for LED timing
+long previousMillis = 0;    // will store last time LED was updated
+const long interval = 500;  // interval at which to blink (500 milliseconds = 0.5 second)
+
+// Variables for button state tracking (to avoid continuous printing)
+int lastButtonState = LOW;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT); // Set the button pin as an input
+  Serial.begin(9600);
+  Serial.println("System Ready. Monitoring button state and blinking LED...");
+}
+
+void loop() {
+  // --- PART 1: Non-Blocking LED Blink ---
+  unsigned long currentMillis = millis(); // Store the current time
+
+  // Check if the required interval has passed
+  if (currentMillis - previousMillis >= interval) {
+    // Save the current time as the last time the LED was updated
+    previousMillis = currentMillis;
+
+    // Toggle the state of the LED
+    if (digitalRead(ledPin) == LOW) {
+      digitalWrite(ledPin, HIGH);
+    } else {
+      digitalWrite(ledPin, LOW);
+    }
+  }
+
+  // --- PART 2: Read and Display PB State ---
+  int currentButtonState = digitalRead(buttonPin);
+
+  // Check if the button state has changed since the last loop
+  if (currentButtonState != lastButtonState) {
+    // If the state changed, print the new state
+    if (currentButtonState == HIGH) {
+      Serial.println("Push Button: PRESSED");
+    } else {
+      Serial.println("Push Button: RELEASED");
+    }
+    // Update the last state
+    lastButtonState = currentButtonState;
+  }
+
+  // Note: There is NO delay() here, so the loop runs extremely fast, allowing
+  // both the blinking and button monitoring to happen simultaneously.
+}
