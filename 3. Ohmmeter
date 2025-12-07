@@ -1,5 +1,5 @@
-// This code measures an unknown resistor using a known reference resistor.
-// It calculates the resistance using Ohm's law and prints it.
+// This code measures the resistance of an unknown resistor (Rx) on A0.
+// It calculates the value in Ohms using a known reference resistor (R_ref).
 
 // The setup() function runs once when the board is powered on or reset
 void setup() {
@@ -10,7 +10,7 @@ void setup() {
 // The loop() function runs continuously after setup() finishes
 void loop() {
   int raw = analogRead(A0);         // Read the raw analog value (0-1023)
-  float vOut = raw * (5.0 / 1023.0);// Convert raw value to voltage
+  float vOut = raw * (5.0 / 1023.0);// Convert raw value to voltage at A0
   float R_ref = 10000.0;            // Define the known resistor value (10k)
   
   float Rx = R_ref * (5.0 / vOut - 1.0); // Calculate Unknown Resistance
