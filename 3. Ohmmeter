@@ -1,35 +1,21 @@
-// Define the analog pin and the reference resistor value
-const int resistancePin = A0;
-const float R_ref = 10000.0; // Reference Resistor value in Ohms (10k)
-const float V_CC = 5.0;      // Arduino supply voltage
+// This code measures an unknown resistor using a known reference resistor.
+// It calculates the resistance using Ohm's law and prints it.
 
+// The setup() function runs once when the board is powered on or reset
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600);               // Initialize serial communication
 }
 
+
+// The loop() function runs continuously after setup() finishes
 void loop() {
-  // 1. Read the analog value (0-1023)
-  int rawValue = analogRead(resistancePin);
+  int raw = analogRead(A0);         // Read the raw analog value (0-1023)
+  float vOut = raw * (5.0 / 1023.0);// Convert raw value to voltage
+  float R_ref = 10000.0;            // Define the known resistor value (10k)
+  
+  float Rx = R_ref * (5.0 / vOut - 1.0); // Calculate Unknown Resistance
 
-  // 2. Convert the raw value (0-1023) to the voltage measured at A0 (V_out)
-  float V_out = rawValue * (V_CC / 1024.0);
-
-  // Handle the case where V_out is very close to 5V (i.e., open circuit)
-  if (V_out > 4.9) {
-    Serial.println("Resistance (R_x): OPEN (High Resistance)");
-  } else if (V_out < 0.1) {
-    // Handle the case where V_out is very close to 0V (i.e., short circuit)
-    Serial.println("Resistance (R_x): 0 Ohms (Short Circuit)");
-  } else {
-    // 3. Calculate the unknown resistance (R_x) using the derived formula:
-    // R_x = R_ref * (V_CC / V_out - 1)
-    float R_x = R_ref * (V_CC / V_out - 1.0);
-
-    // 4. Display the result
-    Serial.print("Resistance (R_x): ");
-    Serial.print(R_x);
-    Serial.println(" Ohms");
-  }
-
-  delay(1000);
+  Serial.print(Rx);                 // Print the resistance value
+  Serial.println(" Ohms");          // Print the unit " Ohms"
+  delay(100);                       // Wait for 100 milliseconds
 }
