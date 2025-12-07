@@ -1,1 +1,29 @@
 
+// Define the analog pin and the voltage divider resistor values
+const int voltagePin = A0;
+const float R1 = 30000.0; // Resistance of R1 in Ohms (30k)
+const float R2 = 10000.0; // Resistance of R2 in Ohms (10k)
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  // 1. Read the analog value (0-1023)
+  int rawValue = analogRead(voltagePin);
+
+  // 2. Convert the raw value (0-1023) to the actual voltage measured by A0 (V_out)
+  // V_out = (rawValue / 1024) * 5.0V
+  float V_out = rawValue * (5.0 / 1024.0);
+
+  // 3. Calculate the actual input voltage (V_in) using the voltage divider formula
+  // V_in = V_out * ((R1 + R2) / R2)
+  float V_in = V_out * ((R1 + R2) / R2);
+
+  // 4. Display the result
+  Serial.print("Input Voltage (V_in): ");
+  Serial.print(V_in, 2); // Print with 2 decimal places
+  Serial.println(" Volts");
+
+  delay(500);
+}
