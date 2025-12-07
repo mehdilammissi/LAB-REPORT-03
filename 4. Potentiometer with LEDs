@@ -1,1 +1,43 @@
+// Define the analog pin for the potentiometer
+const int potPin = A0;
 
+// Define an array to store the digital pin numbers for the 5 LEDs
+const int ledPins[] = {2, 3, 4, 5, 6};
+const int numLeds = 5;
+
+void setup() {
+  // Set all LED pins as OUTPUTs
+  for (int i = 0; i < numLeds; i++) {
+    pinMode(ledPins[i], OUTPUT);
+  }
+  Serial.begin(9600);
+}
+
+void loop() {
+  // 1. Read the analog value (0-1023)
+  int potValue = analogRead(potPin);
+
+  // 2. Map the pot value (0-1023) to a range from 0 to 5
+  // This result (ledLevel) represents the number of LEDs to turn ON.
+  // We use 1023 + 1 = 1024 as the max input for a smooth 0-5 output.
+  int ledLevel = map(potValue, 0, 1023, 0, numLeds);
+
+  Serial.print("Pot Value: ");
+  Serial.print(potValue);
+  Serial.print(" -> LEDs ON: ");
+  Serial.println(ledLevel);
+
+  // 3. Loop through the LED pins to control their state
+  for (int i = 0; i < numLeds; i++) {
+    // If the current LED index (i) is less than the calculated level, turn it ON
+    if (i < ledLevel) {
+      digitalWrite(ledPins[i], HIGH);
+    } else {
+      // Otherwise, turn it OFF
+      digitalWrite(ledPins[i], LOW);
+    }
+  }
+
+  // Small delay for serial readability
+  delay(50);
+}
